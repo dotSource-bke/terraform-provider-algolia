@@ -5,7 +5,7 @@ DEV_VERSION=999.999.999
 # Build provider and place it plugins directory to be able to sideload the built provider.
 .PHONY: install
 install:
-	go build -o ~/.terraform.d/plugins/registry.terraform.io/k-yomo/algolia/${DEV_VERSION}/darwin_amd64/terraform-provider-algolia
+	go build -o ${APPDATA}/terraform.d/plugins/terraform.local/dotsource-bke/algolia/${DEV_VERSION}/windows_amd64/terraform-provider-algolia.exe
 
 .PHONY: generate
 generate:
