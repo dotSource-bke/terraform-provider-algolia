@@ -1,9 +1,7 @@
 # Terraform Provider Algolia
 
 [![License: MPL-2.0](https://img.shields.io/badge/License-MPL2.0-blue.svg)](./LICENSE)
-[![Tests Workflow](https://github.com/k-yomo/terraform-provider-algolia/workflows/Tests/badge.svg)](https://github.com/k-yomo/terraform-provider-algolia/actions/workflows/test.yml)
-[![codecov](https://codecov.io/gh/k-yomo/terraform-provider-algolia/branch/main/graph/badge.svg)](https://codecov.io/gh/k-yomo/terraform-provider-algolia)
-[![Go Report Card](https://goreportcard.com/badge/k-yomo/terraform-provider-algolia)](https://goreportcard.com/report/k-yomo/terraform-provider-algolia)
+[![Tests Workflow](https://github.com/dotsource-bke/terraform-provider-algolia/workflows/Tests/badge.svg)](https://github.com/dotSource-bke/terraform-provider-algolia/actions/workflows/test.yml)
 
 Terraform Provider for [Algolia](https://www.algolia.com).
 
@@ -11,7 +9,7 @@ Terraform Provider for [Algolia](https://www.algolia.com).
 
 Full, comprehensive documentation is available on the Terraform website:
 
-[https://registry.terraform.io/providers/k-yomo/algolia/latest/docs](https://registry.terraform.io/providers/k-yomo/algolia/latest/docs)
+[https://registry.terraform.io/providers/dotSource-bke/algolia/latest/docs](https://registry.terraform.io/providers/dotSource-bke/algolia/latest/docs)
 
 ## Using the provider
 
