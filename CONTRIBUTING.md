@@ -18,7 +18,7 @@ $ make install
 terraform {
   required_providers {
     algolia = {
-      source  = "k-yomo/algolia"
+      source  = "terraform.local/dotsource-bke/algolia"
       version = "999.999.999"
     }
   }
