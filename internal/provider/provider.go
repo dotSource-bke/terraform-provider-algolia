@@ -2,15 +2,13 @@ package provider
 
 import (
 	"context"
-
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/region"
+
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/suggestions"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/transport"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"github.com/hashicorp/terraform-provider-algolia/internal/algoliautil"
 	"github.com/hashicorp/terraform-provider-algolia/internal/mutex"
 )
 
@@ -38,6 +36,12 @@ func New(version string) func() *schema.Provider {
 					Sensitive:   true,
 					DefaultFunc: schema.EnvDefaultFunc("ALGOLIA_API_KEY", nil),
 					Description: "The API key to access algolia resources. Defaults to the env variable `ALGOLIA_API_KEY`.",
+				},
+				"region": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("ALGOLIA_REGION", nil),
+					Description: "The Region where algolia is deployed.",
 				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
@@ -81,14 +85,15 @@ func (a *apiClient) newSuggestionsClient(region region.Region) *suggestions.Clie
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		userAgent := p.UserAgent("terraform-provider-algolia", version)
-		return newAPIClient(d.Get("app_id").(string), d.Get("api_key").(string), userAgent), nil
+		return newAPIClient(d.Get("app_id").(string), d.Get("api_key").(string), d.Get("region").(string), userAgent), nil
 	}
 }
 
-func newAPIClient(appID, apiKey, userAgent string) *apiClient {
-	var algoliaRequester transport.Requester
-	if logging.IsDebugOrHigher() {
-		algoliaRequester = algoliautil.NewDebugRequester()
+func newAPIClient(appID, apiKey, algoliaRegion, userAgent string) *apiClient {
+	searchConfig := search.Configuration{
+		AppID:          appID,
+		APIKey:         apiKey,
+		ExtraUserAgent: userAgent,
 	}
 
 	searchConfig := search.Configuration{
@@ -96,6 +101,7 @@ func newAPIClient(appID, apiKey, userAgent string) *apiClient {
 		APIKey:         apiKey,
 		ExtraUserAgent: userAgent,
 		Requester:      algoliaRequester,
+		Region:         region.Region(algoliaRegion),
 	}
 	searchClient := search.NewClientWithConfig(searchConfig)
 
