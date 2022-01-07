@@ -27,7 +27,7 @@ func newTestAlgoliaProvider() *schema.Provider {
 }
 
 func newTestAPIClient() *apiClient {
-	return newAPIClient(os.Getenv("ALGOLIA_APP_ID"), os.Getenv("ALGOLIA_API_KEY"), "test")
+	return newAPIClient(os.Getenv("ALGOLIA_APP_ID"), os.Getenv("ALGOLIA_API_KEY"), os.Getenv("ALGOLIA_REGION"), "test")
 }
 
 func testAccPreCheck(t *testing.T) {
@@ -36,5 +36,8 @@ func testAccPreCheck(t *testing.T) {
 	}
 	if os.Getenv("ALGOLIA_API_KEY") == "" {
 		t.Fatal("env variable 'ALGOLIA_API_KEY' is not set")
+	}
+	if os.Getenv("ALGOLIA_REGION") == "" {
+		t.Fatal("env variable 'ALGOLIA_REGION' is not set")
 	}
 }

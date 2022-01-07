@@ -2,6 +2,7 @@ package provider
 
 import (
 	"context"
+	"github.com/algolia/algoliasearch-client-go/v3/algolia/region"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/search"
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/suggestions"
@@ -31,6 +32,12 @@ func New(version string) func() *schema.Provider {
 					DefaultFunc: schema.EnvDefaultFunc("ALGOLIA_API_KEY", nil),
 					Description: "The API key to access algolia resources. Defaults to the env variable `ALGOLIA_API_KEY`.",
 				},
+				"region": {
+					Type:        schema.TypeString,
+					Optional:    true,
+					DefaultFunc: schema.EnvDefaultFunc("ALGOLIA_REGION", nil),
+					Description: "The Region where algolia is deployed.",
+				},
 			},
 			ResourcesMap: map[string]*schema.Resource{
 				"algolia_index":             resourceIndex(),
@@ -57,11 +64,11 @@ type apiClient struct {
 func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 		userAgent := p.UserAgent("terraform-provider-algolia", version)
-		return newAPIClient(d.Get("app_id").(string), d.Get("api_key").(string), userAgent), nil
+		return newAPIClient(d.Get("app_id").(string), d.Get("api_key").(string), d.Get("region").(string), userAgent), nil
 	}
 }
 
-func newAPIClient(appID, apiKey, userAgent string) *apiClient {
+func newAPIClient(appID, apiKey, algoliaRegion, userAgent string) *apiClient {
 	searchConfig := search.Configuration{
 		AppID:          appID,
 		APIKey:         apiKey,
@@ -73,6 +80,7 @@ func newAPIClient(appID, apiKey, userAgent string) *apiClient {
 		AppID:          appID,
 		APIKey:         apiKey,
 		ExtraUserAgent: userAgent,
+		Region:         region.Region(algoliaRegion),
 	}
 	suggestionsClient := suggestions.NewClientWithConfig(suggestionsConfig)
 
