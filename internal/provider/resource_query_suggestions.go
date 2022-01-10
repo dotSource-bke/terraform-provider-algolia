@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"reflect"
 	"time"
 
 	"github.com/algolia/algoliasearch-client-go/v3/algolia/region"
@@ -272,16 +271,6 @@ func refreshQuerySuggestionsState(ctx context.Context, d *schema.ResourceData, m
 }
 
 func mapToQuerySuggestionsIndexConfig(d *schema.ResourceData) suggestions.IndexConfiguration {
-
-	// TODO can be removed when bug is fixed https://github.com/algolia/algoliasearch-client-go/issues/671
-	isTypeBool := reflect.TypeOf(d.Get("languages_config")).Kind() == reflect.Bool
-	if isTypeBool {
-		err := d.Set("languages_config", new([]string))
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-	}
-
 	indexConfig := suggestions.IndexConfiguration{
 		IndexName: d.Get("index_name").(string),
 	}
